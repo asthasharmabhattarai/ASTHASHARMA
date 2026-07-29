@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A premium personal portfolio page for Pratyush built with HTML, CSS, and JavaScript." />
+  <title>Pratyush — Creative Developer</title>
+  <style>
+    :root {
+      --bg: #060816;
+      --bg-soft: rgba(255,255,255,0.06);
+      --card: rgba(255,255,255,0.08);
+      --text: #f5f7ff;
+      --muted: #aab4d0;
+      --accent: #7c93ff;
+      --accent-2: #23d5ab;
+      --accent-3: #ff7db1;
+      --border: rgba(255,255,255,0.14);
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124,147,255,0.28), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(35,213,171,0.2), transparent 30%),
+        var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+      pointer-events: none;
+    }
+
+    .glow {
+      position: fixed;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.35;
+      pointer-events: none;
+      transition: transform 0.2s ease-out;
+      z-index: 0;
+    }
+
+    .glow.one { background: var(--accent); top: -100px; left: -80px; }
+    .glow.two { background: var(--accent-3); bottom: -100px; right: -60px; }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 70px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 18px;
+      z-index: 5;
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.95rem;
+      color: #eaf0ff;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 18px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover, nav a.active { color: white; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 28px;
+      align-items: center;
+      padding: 90px 0 60px;
+    }
+
+    .hero-card, .card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .hero-card {
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -30px -30px auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(124,147,255,0.45), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      color: #dce8ff;
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 4.4rem);
+      line-height: 1.02;
+      margin: 0 0 14px;
+    }
+
+    .typing {
+      color: #9acbff;
+      font-weight: 700;
+      min-height: 36px;
+    }
+
+    .hero p { color: var(--muted); font-size: 1.04rem; line-height: 1.7; }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: white; box-shadow: 0 10px 30px rgba(124,147,255,0.28); }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+
+    .stat-box {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-left: 2px solid rgba(124,147,255,0.5);
+    }
+
+    .stat-box strong { font-size: 1.6rem; color: white; }
+    .stat-box span { color: var(--muted); }
+
+    .info-panel {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-panel h3 { margin: 0; }
+    .info-panel ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.7; }
+
+    section { padding: 36px 0 0; }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .section-title h2 { margin: 0; font-size: 1.3rem; }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card { padding: 24px; }
+    .card p, .card li { color: var(--muted); line-height: 1.7; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.95rem;
+      color: #eaf0ff;
+    }
+
+    .project-list { display: grid; gap: 14px; }
+    .project-item {
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+    }
+    .project-item strong { display: block; margin-bottom: 6px; color: white; }
+
+    .contact-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 28px;
+      margin-top: 8px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 0 10px;
+      font-size: 0.95rem;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: all 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .contact-card { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { border-radius: 24px; flex-direction: column; gap: 12px; }
+      nav ul { flex-wrap: wrap; justify-content: center; }
+      .hero-card, .card, .info-panel { padding: 20px; }
+      .hero { padding-top: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow one"></div>
+  <div class="glow two"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">Pratyush</div>
+      <nav>
+        <ul>
+          <li><a href="#home" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="home">
+      <section class="hero">
+        <div class="hero-card reveal">
+          <span class="eyebrow">Creative developer • digital storyteller</span>
+          <h1>I build bold ideas into unforgettable experiences.</h1>
+          <div class="typing" id="typingText">Developer</div>
+          <p>I’m Pratyush — a passionate creator who loves blending design, code, and storytelling to craft beautiful digital products that feel as good as they look.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#contact">Let’s connect</a>
+            <a class="btn btn-secondary" href="#work">See my work</a>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="hero-card info-panel reveal">
+            <h3>What I bring</h3>
+            <ul>
+              <li>Sharp eye for aesthetics and detail</li>
+              <li>Clean, modern web experiences</li>
+              <li>Strong storytelling and brand-focused thinking</li>
+            </ul>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card stat-box reveal">
+              <strong>8+</strong>
+              <span>Projects crafted</span>
+            </div>
+            <div class="card stat-box reveal">
+              <strong>100%</strong>
+              <span>Passion driven</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="reveal">
+        <div class="section-title">
+          <h2>About me</h2>
+        </div>
+        <div class="grid grid-2">
+          <div class="card">
+            <p>I thrive at the intersection of imagination and execution. Whether I’m shaping a product, designing a visual experience, or building a polished interface, I focus on clarity, emotion, and impact.</p>
+            <p>My work is rooted in curiosity, precision, and the belief that great digital experiences should feel effortless and memorable.</p>
+          </div>
+          <div class="card">
+            <p>I’m inspired by modern design language, clean interfaces, and ambitious ideas that turn into something tangible. I enjoy creating experiences that feel premium, intuitive, and deeply human.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="skills" class="reveal">
+        <div class="section-title">
+          <h2>Skills</h2>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <h3>Design</h3>
+            <p>Visual storytelling, modern layouts, mood, composition, and immersive experience design.</p>
+            <div class="chip-row">
+              <span class="chip">UI Design</span>
+              <span class="chip">Branding</span>
+              <span class="chip">Visual Systems</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Development</h3>
+            <p>Building polished, responsive, and high-performance web experiences from idea to launch.</p>
+            <div class="chip-row">
+              <span class="chip">HTML</span>
+              <span class="chip">CSS</span>
+              <span class="chip">JavaScript</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Thinking</h3>
+            <p>Strategy, problem solving, creative direction, and crafting meaningful user journeys.</p>
+            <div class="chip-row">
+              <span class="chip">Research</span>
+              <span class="chip">Strategy</span>
+              <span class="chip">Storytelling</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="work" class="reveal">
+        <div class="section-title">
+          <h2>Selected work</h2>
+        </div>
+        <div class="project-list">
+          <div class="project-item">
+            <strong>Luxury Landing Experience</strong>
+            <span>Crafted as a cinematic, high-end web experience with strong hierarchy, motion, and elegant storytelling.</span>
+          </div>
+          <div class="project-item">
+            <strong>Interactive Portfolio</strong>
+            <span>Built to feel immersive and refined, balancing sleek visuals with intuitive navigation and personality.</span>
+          </div>
+          <div class="project-item">
+            <strong>Creative Brand Site</strong>
+            <span>Designed to make a lasting first impression through thoughtful structure, visual rhythm, and a memorable feel.</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="reveal">
+        <div class="card contact-card">
+          <div>
+            <h3>Let’s build something unforgettable</h3>
+            <p>Open to collaboration, ambitious ideas, and beautiful digital experiences.</p>
+          </div>
+          <a class="btn btn-primary" href="mailto:pratyush@example.com">Say hello</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© <span id="year"></span> Pratyush. Crafted with passion, design, and code.</p>
+    </footer>
+  </div>
+
+  <script>
+    const typingEl = document.getElementById('typingText');
+    const words = ['Developer', 'Designer', 'Builder', 'Creator'];
+    let wordIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeLoop() {
+      const current = words[wordIndex];
+      typingEl.textContent = current.slice(0, charIndex);
+
+      if (!isDeleting && charIndex < current.length) {
+        charIndex++;
+        setTimeout(typeLoop, 90);
+      } else if (isDeleting && charIndex > 0) {
+        charIndex--;
+        setTimeout(typeLoop, 60);
+      } else {
+        isDeleting = !isDeleting;
+        if (!isDeleting) wordIndex = (wordIndex + 1) % words.length;
+        setTimeout(typeLoop, 1100);
+      }
+    }
+    typeLoop();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const navLinks = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('main section[id]');
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+        }
+      });
+    }, { threshold: 0.45 });
+
+    sections.forEach(section => sectionObserver.observe(section));
+
+    const glowOne = document.querySelector('.glow.one');
+    const glowTwo = document.querySelector('.glow.two');
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 24;
+      const y = (e.clientY / window.innerHeight - 0.5) * 24;
+      glowOne.style.transform = `translate(${x}px, ${y}px)`;
+      glowTwo.style.transform = `translate(${-x}px, ${-y}px)`;
+    });
+  </script>
+</body>
+</html>
