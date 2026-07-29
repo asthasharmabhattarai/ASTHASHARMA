@@ -48,10 +48,222 @@
     </aside>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Semantic HTML Workshop. All rights reserved.</p>
-  </footer>
+   <footer>
+     <p>&copy; 2026 Semantic HTML Workshop. All rights reserved.</p>
+   </footer>
 
-</body>
+   <style>
+     #chat-toggle {
+       position: fixed;
+       bottom: 24px;
+       right: 24px;
+       width: 56px;
+       height: 56px;
+       border-radius: 50%;
+       background: #2c3e50;
+       color: #fff;
+       border: none;
+       font-size: 24px;
+       cursor: pointer;
+       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+       z-index: 1000;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+     }
 
-</html>
+     #chat-toggle:hover {
+       background: #1a252f;
+     }
+
+     #chat-widget {
+       position: fixed;
+       bottom: 90px;
+       right: 24px;
+       width: 320px;
+       height: 420px;
+       background: #fff;
+       border-radius: 12px;
+       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+       display: none;
+       flex-direction: column;
+       z-index: 999;
+       overflow: hidden;
+     }
+
+     #chat-widget.open {
+       display: flex;
+     }
+
+     #chat-header {
+       background: #2c3e50;
+       color: #fff;
+       padding: 12px 16px;
+       font-weight: bold;
+       font-size: 15px;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+     }
+
+     #chat-close {
+       background: none;
+       border: none;
+       color: #fff;
+       font-size: 18px;
+       cursor: pointer;
+     }
+
+     #chat-messages {
+       flex: 1;
+       padding: 12px;
+       overflow-y: auto;
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+     }
+
+     .chat-msg {
+       max-width: 80%;
+       padding: 8px 12px;
+       border-radius: 12px;
+       font-size: 14px;
+       line-height: 1.4;
+     }
+
+     .chat-msg.bot {
+       background: #ecf0f1;
+       align-self: flex-start;
+       border-bottom-left-radius: 4px;
+     }
+
+     .chat-msg.user {
+       background: #2c3e50;
+       color: #fff;
+       align-self: flex-end;
+       border-bottom-right-radius: 4px;
+     }
+
+     #chat-input-area {
+       display: flex;
+       padding: 8px;
+       border-top: 1px solid #e0e0e0;
+     }
+
+     #chat-input {
+       flex: 1;
+       padding: 8px 12px;
+       border: 1px solid #ccc;
+       border-radius: 20px;
+       font-size: 14px;
+       outline: none;
+     }
+
+     #chat-input:focus {
+       border-color: #2c3e50;
+     }
+
+     #chat-send {
+       margin-left: 8px;
+       padding: 8px 14px;
+       background: #2c3e50;
+       color: #fff;
+       border: none;
+       border-radius: 20px;
+       cursor: pointer;
+       font-size: 14px;
+     }
+
+     #chat-send:hover {
+       background: #1a252f;
+     }
+   </style>
+
+   <button id="chat-toggle" title="Open chat">&#9993;</button>
+
+   <div id="chat-widget">
+     <div id="chat-header">
+       <span>Workshop Assistant</span>
+       <button id="chat-close" title="Close">&times;</button>
+     </div>
+     <div id="chat-messages">
+       <div class="chat-msg bot">Hello! How can I help you with the workshop today?</div>
+     </div>
+     <div id="chat-input-area">
+       <input type="text" id="chat-input" placeholder="Type a message..." />
+       <button id="chat-send">Send</button>
+     </div>
+   </div>
+
+   <script>
+     const toggle = document.getElementById('chat-toggle');
+     const widget = document.getElementById('chat-widget');
+     const close = document.getElementById('chat-close');
+     const messages = document.getElementById('chat-messages');
+     const input = document.getElementById('chat-input');
+     const send = document.getElementById('chat-send');
+
+     function addMessage(text, sender) {
+       const div = document.createElement('div');
+       div.classList.add('chat-msg', sender);
+       div.textContent = text;
+       messages.appendChild(div);
+       messages.scrollTop = messages.scrollHeight;
+     }
+
+     function getResponse(msg) {
+       const lower = msg.toLowerCase();
+       if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+         return 'Hi there! How can I help you today?';
+       }
+       if (lower.includes('semantic') || lower.includes('html')) {
+         return 'Semantic HTML uses elements like &lt;header&gt;, &lt;main&gt;, &lt;article&gt;, and &lt;footer&gt; to give meaning to web content.';
+       }
+       if (lower.includes('workshop') || lower.includes('week 6')) {
+         return 'The Week 6 workshop covers semantic HTML, structured headings, and accessible form controls.';
+       }
+       if (lower.includes('accessibility') || lower.includes('a11y')) {
+         return 'Semantic HTML improves accessibility by helping screen readers understand the structure and meaning of your content.';
+       }
+       if (lower.includes('validator') || lower.includes('check')) {
+         return 'You can validate your HTML at the W3C Validator: https://validator.w3.org/';
+       }
+       if (lower.includes('thank')) {
+         return "You're welcome! Let me know if you have any other questions.";
+       }
+       if (lower.includes('goodbye') || lower.includes('bye')) {
+         return 'Goodbye! Have a great day with your workshop!';
+       }
+       return "I'm not sure about that. Try asking about semantic HTML, accessibility, or the workshop topics!";
+     }
+
+     toggle.addEventListener('click', function() {
+       widget.classList.toggle('open');
+     });
+
+     close.addEventListener('click', function() {
+       widget.classList.remove('open');
+     });
+
+     function handleSend() {
+       const text = input.value.trim();
+       if (!text) return;
+       addMessage(text, 'user');
+       input.value = '';
+       setTimeout(function() {
+         addMessage(getResponse(text), 'bot');
+       }, 400);
+     }
+
+     send.addEventListener('click', handleSend);
+
+     input.addEventListener('keypress', function(e) {
+       if (e.key === 'Enter') {
+         handleSend();
+       }
+     });
+   </script>
+
+ </body>
+
+ </html>
